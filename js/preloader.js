@@ -21,7 +21,7 @@ BasicGame.Preloader.prototype = {
   },
 
   update: function () {
-    this.state.start('Game', true, false, {level: 1});
+    this.state.start('Game', true, false, {level: 0});
     if (this.cache.isSoundDecoded('titleMusic') && this.ready == false) {
       this.ready = true;
       //this.state.start('MainMenu');

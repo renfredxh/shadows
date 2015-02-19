@@ -38,6 +38,7 @@ BasicGame.Game.prototype = {
       this.data = new BasicGame.Data(this.game);
       this.levelName = params.level;
       this.level = this.data.levels[this.levelName];
+      this.maxLevel = this.data.maxLevel;
     },
 
     create: function () {
@@ -50,14 +51,18 @@ BasicGame.Game.prototype = {
       this.lightBitmap = this.game.add.image(0, 0, this.bitmap);
       this.lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
+      this.levelText = this.game.add.text(this.game.width - 16, 8, this.levelName, { fontSize: '20px', fill: '#4ba4f7'});
+      this.levelText.anchor.set(1, 0);
+
       // Player
-      this.player = this.game.add.sprite(20, 20, 'player');
+      this.player = this.game.add.sprite(this.level.player.x, this.level.player.y, 'player');
       this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
       this.player.body.collideWorldBounds = true;
       this.player.body.maxVelocity.setTo(this.MAX_SPEED, this.MAX_SPEED);
       this.player.body.drag.setTo(this.FRICTION, this.FRICTION);
 
       this.gem = this.game.add.sprite(this.level.gem.x, this.level.gem.y, 'gem')
+      this.gem.anchor.setTo(0.5, 0.5);
       this.game.physics.enable(this.gem, Phaser.Physics.ARCADE);
 
       // Police
@@ -67,7 +72,11 @@ BasicGame.Game.prototype = {
       this.level.police.forEach(function (policeData) {
         police = this.police.create(policeData.x, policeData.y, 'police');
         police.anchor.setTo(0.5, 0.5);
-        window.tween = this.game.add.tween(police).to(policeData.tweenProps, policeData.speed, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+        var easing = Phaser.Easing.Sinusoidal.InOut;
+        if (policeData.easing !== undefined) {
+          easing = policeData.easing;
+        }
+        window.tween = this.game.add.tween(police).to(policeData.tweenProps, policeData.speed, easing, true, 0, -1, true);
         window.tween.start();
         police.radius = policeData.radius;
       }, this);
@@ -78,24 +87,26 @@ BasicGame.Game.prototype = {
       this.level.walls.forEach(function (wallData) {
         wall = this.walls.create(wallData.x, wallData.y, 'block');
         this.game.physics.enable(wall, Phaser.Physics.ARCADE);
-        wall.body.immovable = true;
         wall.scale.setTo(wallData.w, wallData.h);
+        if (wallData.centered === true) {
+          wall.reset(wall.x - wall.width/2, wall.y - wall.height/2);
+        }
+        wall.body.immovable = true;
       }, this);
 
       this.cursors = this.game.input.keyboard.createCursorKeys();
 
-      this.testText = this.game.add.text(5, 5, 'N', { fontSize: '12px', fill: '#fff'});
     },
 
     update: function () {
       this.game.physics.arcade.collide(this.player, this.walls);
       this.game.physics.arcade.collide(this.player, this.light);
+      this.physics.arcade.overlap(this.player, this.gem, this.collectGem, null, this);
       // Create a shadow over the bottom layers
       this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
       this.bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
 
       this.movePlayer();
-      this.testText.text = 'N';
       this.police.forEach(function (police) {
         this.castRays(police);
       }, this);
@@ -137,7 +148,7 @@ BasicGame.Game.prototype = {
           points.push(intersect);
           ray = new Phaser.Line(
             police.x, police.y,
-            police.x, intersect.y
+            intersect.x, intersect.y
           )
         } else {
           points.push(ray.end);
@@ -145,8 +156,7 @@ BasicGame.Game.prototype = {
 
         playerHit = this.collidePlayerWithRay(ray);
         if (playerHit) {
-          this.testText.text = 'Y';
-          this.time.events.add(300, this.loseGame, this);
+          this.time.events.add(100, this.loseGame, this);
         }
 
       }
@@ -222,9 +232,21 @@ BasicGame.Game.prototype = {
       return closestIntersect;
     },
 
-    loseGame: function() {
+    collectGem: function() {
+      if (this.levelName == this.maxLevel) {
+        this.resetGame(1);
+      } else {
+        this.resetGame(this.levelName+1);
+      }
+    },
+
+    resetGame: function(level) {
       window.tween.stop();
-      this.state.restart(true, false, {level: this.levelName});
+      this.state.restart(true, false, {level: level});
+    },
+
+    loseGame: function() {
+      this.resetGame(this.levelName);
     },
 
     quitGame: function (pointer) {
