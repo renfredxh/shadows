@@ -26,9 +26,14 @@ BasicGame.Game = function (game) {
     this.lightBitmap;
     this.cursors;
     this.testText;
+    this.level;
 };
 
 BasicGame.Game.prototype = {
+
+    init: function(params) {
+      this.level = params.level;
+    },
 
     create: function () {
       this.game.stage.backgroundColor = 0x4488cc;
@@ -121,6 +126,7 @@ BasicGame.Game.prototype = {
         playerHit = this.collidePlayerWithRay(ray);
         if (playerHit) {
           this.testText.text = 'Y';
+          this.time.events.add(300, this.loseGame, this);
         }
 
       }
@@ -194,6 +200,10 @@ BasicGame.Game.prototype = {
       }, this);
 
       return closestIntersect;
+    },
+
+    loseGame: function() {
+      this.state.restart(true, false, {level: this.level});
     },
 
     quitGame: function (pointer) {
