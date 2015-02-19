@@ -17,8 +17,14 @@ BasicGame.Game = function (game) {
     this.physics;   //  the physics manager (Phaser.Physics)
     this.rnd;       //  the repeatable random number generator (Phaser.RandomDataGenerator)
 
+    this.ACCELERATION = 900;
+    this.MAX_SPEED = 350;
+    this.FRICTION = 900;
+
     this.police;
+    this.player;
     this.lightBitmap;
+    this.cursors;
 };
 
 BasicGame.Game.prototype = {
@@ -29,6 +35,12 @@ BasicGame.Game.prototype = {
       this.police = this.game.add.sprite(80, this.game.height/2, 'police');
       this.police.anchor.setTo(0.5, 0.5);
       this.game.add.tween(this.police).to({x: this.game.width - 80 }, 10000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+
+      this.player = this.game.add.sprite(20, 20, 'player');
+      this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
+      this.player.body.collideWorldBounds = true;
+      this.player.body.maxVelocity.setTo(this.MAX_SPEED, this.MAX_SPEED);
+      this.player.body.drag.setTo(this.FRICTION, this.FRICTION);
 
       this.bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
       this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
@@ -41,19 +53,50 @@ BasicGame.Game.prototype = {
       for (i = 0; i < 4; i++) {
         x = i * this.game.width/4 + 50;
         y = this.game.rnd.between(50, this.game.height - 200)
-        this.game.add.image(x, y, 'block', 0, this.walls).scale.setTo(3, 3);
+        wall = this.walls.create(x, y, 'block');
+        this.game.physics.enable(wall, Phaser.Physics.ARCADE);
+        wall.body.immovable = true;
+        wall.scale.setTo(3, 3);
       }
+
+      this.cursors = this.game.input.keyboard.createCursorKeys();
     },
 
     update: function () {
+      this.game.physics.arcade.collide(this.player, this.walls);
       this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
       this.bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
 
+      this.movePlayer();
+      this.castRays(this.police);
+
+    },
+
+    movePlayer: function() {
+      if (this.cursors.left.isDown) {
+        this.player.body.acceleration.y = 0;
+        this.player.body.acceleration.x = -this.ACCELERATION;
+      } else if (this.cursors.right.isDown) {
+        this.player.body.acceleration.y = 0;
+        this.player.body.acceleration.x = this.ACCELERATION;
+      } else if (this.cursors.down.isDown) {
+        this.player.body.acceleration.x = 0;
+        this.player.body.acceleration.y = this.ACCELERATION;
+      } else if (this.cursors.up.isDown) {
+        this.player.body.acceleration.x = 0;
+        this.player.body.acceleration.y = -this.ACCELERATION;
+      } else {
+        this.player.body.acceleration.x = 0;
+        this.player.body.acceleration.y = 0;
+      }
+    },
+
+    castRays: function(police) {
       var points = [];
       for (var a = 0; a < Math.PI * 2; a += Math.PI/360) {
         var ray = new Phaser.Line(
-          this.police.x, this.police.y,
-          this.police.x + Math.cos(a)*1000, this.police.y + Math.sin(a)*1000
+          police.x, police.y,
+          police.x + Math.cos(a)*300, police.y + Math.sin(a)*300
         );
         var intersect = this.collideWallsWithRays(ray);
         if (intersect) {
