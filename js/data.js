@@ -10,7 +10,7 @@ BasicGame.Data = function(game) {
     x: game.width - 80,
     y: 40
   }
-  this.maxLevel = 4;
+  this.maxLevel = 10;
   this.levels = {
     1: {
       walls: [
@@ -224,7 +224,7 @@ BasicGame.Data = function(game) {
         y: 20
       }
     },
-    0: {
+    10: {
       walls: [
         {x: world.centerX-b*2-16, y: b*8, w: 8.5, h: 1},
         {x: world.centerX-b*2-16, y: b*11, w: 5, h: 1},
@@ -265,7 +265,7 @@ BasicGame.Data = function(game) {
       },
       player: {
         x: 16,
-        y: 16
+        y: world.centerY
       }
     },
   }

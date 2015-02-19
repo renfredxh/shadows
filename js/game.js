@@ -96,6 +96,9 @@ BasicGame.Game.prototype = {
 
       this.cursors = this.game.input.keyboard.createCursorKeys();
 
+      // Audio
+      this.gemSound = this.game.add.audio('gemSound');
+      this.hurtSound = this.game.add.audio('hurtSound');
     },
 
     update: function () {
@@ -233,6 +236,7 @@ BasicGame.Game.prototype = {
     },
 
     collectGem: function() {
+      this.gemSound.play();
       if (this.levelName == this.maxLevel) {
         this.resetGame(1);
       } else {
@@ -246,6 +250,7 @@ BasicGame.Game.prototype = {
     },
 
     loseGame: function() {
+      this.hurtSound.play();
       this.resetGame(this.levelName);
     },
 
