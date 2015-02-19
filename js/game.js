@@ -16,6 +16,7 @@ BasicGame.Game = function (game) {
     this.particles; //  the particle manager (Phaser.Particles)
     this.physics;   //  the physics manager (Phaser.Physics)
     this.rnd;       //  the repeatable random number generator (Phaser.RandomDataGenerator)
+    this.data = BasicGame.Data;
 
     this.ACCELERATION = 1200;
     this.MAX_SPEED = 350;
@@ -26,13 +27,15 @@ BasicGame.Game = function (game) {
     this.lightBitmap;
     this.cursors;
     this.testText;
+    this.levelName;
     this.level;
 };
 
 BasicGame.Game.prototype = {
 
     init: function(params) {
-      this.level = params.level;
+      this.levelName = params.level;
+      this.level = this.data.levels[this.levelName];
     },
 
     create: function () {
@@ -55,15 +58,12 @@ BasicGame.Game.prototype = {
       this.lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
       this.walls = this.game.add.group();
-      var i, x, y;
-      for (i = 0; i < 4; i++) {
-        x = i * this.game.width/4 + 50;
-        y = this.game.rnd.between(50, this.game.height - 200)
-        wall = this.walls.create(x, y, 'block');
+      this.level.walls.forEach(function (wallData) {
+        wall = this.walls.create(wallData.x, wallData.y, 'block');
         this.game.physics.enable(wall, Phaser.Physics.ARCADE);
         wall.body.immovable = true;
-        wall.scale.setTo(3, 3);
-      }
+        wall.scale.setTo(wallData.w, wallData.h);
+      }, this);
 
       this.cursors = this.game.input.keyboard.createCursorKeys();
 
@@ -203,7 +203,7 @@ BasicGame.Game.prototype = {
     },
 
     loseGame: function() {
-      this.state.restart(true, false, {level: this.level});
+      this.state.restart(true, false, {level: this.levelName});
     },
 
     quitGame: function (pointer) {
