@@ -41,9 +41,12 @@ BasicGame.Game.prototype = {
     create: function () {
       this.game.stage.backgroundColor = 0x4488cc;
 
-      this.police = this.game.add.sprite(80, this.game.height/2, 'police');
-      this.police.anchor.setTo(0.5, 0.5);
-      this.game.add.tween(this.police).to({x: this.game.width - 80 }, 10000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+      // Bitmap used for drawing light from the ray caster.
+      this.bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
+      this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
+      this.bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
+      this.lightBitmap = this.game.add.image(0, 0, this.bitmap);
+      this.lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
       this.player = this.game.add.sprite(20, 20, 'player');
       this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
@@ -51,11 +54,9 @@ BasicGame.Game.prototype = {
       this.player.body.maxVelocity.setTo(this.MAX_SPEED, this.MAX_SPEED);
       this.player.body.drag.setTo(this.FRICTION, this.FRICTION);
 
-      this.bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
-      this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
-      this.bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
-      this.lightBitmap = this.game.add.image(0, 0, this.bitmap);
-      this.lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
+      this.police = this.game.add.sprite(80, this.game.height/2, 'police');
+      this.police.anchor.setTo(0.5, 0.5);
+      this.game.add.tween(this.police).to({x: this.game.width - 80 }, 10000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
 
       this.walls = this.game.add.group();
       this.level.walls.forEach(function (wallData) {
@@ -73,6 +74,7 @@ BasicGame.Game.prototype = {
     update: function () {
       this.game.physics.arcade.collide(this.player, this.walls);
       this.game.physics.arcade.collide(this.player, this.light);
+      // Create a shadow over the bottom layers
       this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
       this.bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
 
