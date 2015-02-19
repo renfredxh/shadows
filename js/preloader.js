@@ -12,8 +12,9 @@ BasicGame.Preloader.prototype = {
 
   preload: function () {
     this.load.image('block', 'assets/block.png');
-    this.load.image('police', 'assets/light.png');
+    this.load.image('police', 'assets/badge.png');
     this.load.image('player', 'assets/player.png');
+    this.load.image('gem', 'assets/gem.png');
   },
 
   create: function () {

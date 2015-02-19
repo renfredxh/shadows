@@ -16,14 +16,15 @@ BasicGame.Game = function (game) {
     this.particles; //  the particle manager (Phaser.Particles)
     this.physics;   //  the physics manager (Phaser.Physics)
     this.rnd;       //  the repeatable random number generator (Phaser.RandomDataGenerator)
-    this.data = new BasicGame.Data(game);
 
     this.ACCELERATION = 1200;
     this.MAX_SPEED = 350;
     this.FRICTION = 1200;
 
+    this.data;
     this.police;
     this.player;
+    this.gem;
     this.lightBitmap;
     this.cursors;
     this.testText;
@@ -34,6 +35,7 @@ BasicGame.Game = function (game) {
 BasicGame.Game.prototype = {
 
     init: function(params) {
+      this.data = new BasicGame.Data(this.game);
       this.levelName = params.level;
       this.level = this.data.levels[this.levelName];
     },
@@ -55,13 +57,18 @@ BasicGame.Game.prototype = {
       this.player.body.maxVelocity.setTo(this.MAX_SPEED, this.MAX_SPEED);
       this.player.body.drag.setTo(this.FRICTION, this.FRICTION);
 
+      this.gem = this.game.add.sprite(this.level.gem.x, this.level.gem.y, 'gem')
+      this.game.physics.enable(this.gem, Phaser.Physics.ARCADE);
+
       // Police
       var police;
+      var tween;
       this.police = this.game.add.group();
       this.level.police.forEach(function (policeData) {
         police = this.police.create(policeData.x, policeData.y, 'police');
         police.anchor.setTo(0.5, 0.5);
-        this.game.add.tween(police).to(policeData.tweenProps, policeData.tweenDuration, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+        window.tween = this.game.add.tween(police).to(policeData.tweenProps, policeData.speed, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+        window.tween.start();
         police.radius = policeData.radius;
       }, this);
 
@@ -216,17 +223,16 @@ BasicGame.Game.prototype = {
     },
 
     loseGame: function() {
+      window.tween.stop();
       this.state.restart(true, false, {level: this.levelName});
     },
 
     quitGame: function (pointer) {
-
         //  Here you should destroy anything you no longer need.
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
         //  Then let's go back to the main menu.
         this.state.start('MainMenu');
-
     }
 
 };

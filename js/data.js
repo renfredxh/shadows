@@ -10,10 +10,14 @@ BasicGame.Data = function(game) {
           x: 20,
           y: game.height/2,
           radius: 300,
-          tweenProps: {x: game.height - 80 },
-          tweenDuration: 10000
+          tweenProps: {x: game.width - 80 },
+          speed: 10000
         }
-      ]
+      ],
+      gem: {
+        x: game.width - 20,
+        y: game.height - 20
+      }
     }
   }
 }
