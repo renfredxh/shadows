@@ -16,7 +16,7 @@ BasicGame.Game = function (game) {
     this.particles; //  the particle manager (Phaser.Particles)
     this.physics;   //  the physics manager (Phaser.Physics)
     this.rnd;       //  the repeatable random number generator (Phaser.RandomDataGenerator)
-    this.data = BasicGame.Data;
+    this.data = new BasicGame.Data(game);
 
     this.ACCELERATION = 1200;
     this.MAX_SPEED = 350;
@@ -48,16 +48,25 @@ BasicGame.Game.prototype = {
       this.lightBitmap = this.game.add.image(0, 0, this.bitmap);
       this.lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
+      // Player
       this.player = this.game.add.sprite(20, 20, 'player');
       this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
       this.player.body.collideWorldBounds = true;
       this.player.body.maxVelocity.setTo(this.MAX_SPEED, this.MAX_SPEED);
       this.player.body.drag.setTo(this.FRICTION, this.FRICTION);
 
-      this.police = this.game.add.sprite(80, this.game.height/2, 'police');
-      this.police.anchor.setTo(0.5, 0.5);
-      this.game.add.tween(this.police).to({x: this.game.width - 80 }, 10000, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+      // Police
+      var police;
+      this.police = this.game.add.group();
+      this.level.police.forEach(function (policeData) {
+        police = this.police.create(policeData.x, policeData.y, 'police');
+        police.anchor.setTo(0.5, 0.5);
+        this.game.add.tween(police).to(policeData.tweenProps, policeData.tweenDuration, Phaser.Easing.Sinusoidal.InOut, true, 0, -1, true);
+        police.radius = policeData.radius;
+      }, this);
 
+      // Walls
+      var wall;
       this.walls = this.game.add.group();
       this.level.walls.forEach(function (wallData) {
         wall = this.walls.create(wallData.x, wallData.y, 'block');
@@ -80,7 +89,9 @@ BasicGame.Game.prototype = {
 
       this.movePlayer();
       this.testText.text = 'N';
-      this.castRays(this.police);
+      this.police.forEach(function (police) {
+        this.castRays(police);
+      }, this);
 
     },
 
@@ -111,7 +122,7 @@ BasicGame.Game.prototype = {
       for (var a = 0; a < Math.PI * 2; a += Math.PI/360) {
         ray = new Phaser.Line(
           police.x, police.y,
-          police.x + Math.cos(a)*300, police.y + Math.sin(a)*300
+          police.x + Math.cos(a)*police.radius, police.y + Math.sin(a)*police.radius
         );
 
         intersect = this.collideWallsWithRay(ray);
