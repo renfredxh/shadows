@@ -17,14 +17,15 @@ BasicGame.Game = function (game) {
     this.physics;   //  the physics manager (Phaser.Physics)
     this.rnd;       //  the repeatable random number generator (Phaser.RandomDataGenerator)
 
-    this.ACCELERATION = 900;
+    this.ACCELERATION = 1200;
     this.MAX_SPEED = 350;
-    this.FRICTION = 900;
+    this.FRICTION = 1200;
 
     this.police;
     this.player;
     this.lightBitmap;
     this.cursors;
+    this.testText;
 };
 
 BasicGame.Game.prototype = {
@@ -60,14 +61,18 @@ BasicGame.Game.prototype = {
       }
 
       this.cursors = this.game.input.keyboard.createCursorKeys();
+
+      this.testText = this.game.add.text(5, 5, 'N', { fontSize: '12px', fill: '#fff'});
     },
 
     update: function () {
       this.game.physics.arcade.collide(this.player, this.walls);
+      this.game.physics.arcade.collide(this.player, this.light);
       this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
       this.bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
 
       this.movePlayer();
+      this.testText.text = 'N';
       this.castRays(this.police);
 
     },
@@ -93,17 +98,31 @@ BasicGame.Game.prototype = {
 
     castRays: function(police) {
       var points = [];
+      var ray;
+      var intersect;
+      var playerHit;
       for (var a = 0; a < Math.PI * 2; a += Math.PI/360) {
-        var ray = new Phaser.Line(
+        ray = new Phaser.Line(
           police.x, police.y,
           police.x + Math.cos(a)*300, police.y + Math.sin(a)*300
         );
-        var intersect = this.collideWallsWithRays(ray);
+
+        intersect = this.collideWallsWithRay(ray);
         if (intersect) {
           points.push(intersect);
+          ray = new Phaser.Line(
+            police.x, police.y,
+            police.x, intersect.y
+          )
         } else {
           points.push(ray.end);
         }
+
+        playerHit = this.collidePlayerWithRay(ray);
+        if (playerHit) {
+          this.testText.text = 'Y';
+        }
+
       }
 
       this.bitmap.context.beginPath();
@@ -121,7 +140,30 @@ BasicGame.Game.prototype = {
       this.bitmap.dirty = true;
     },
 
-    collideWallsWithRays: function(ray) {
+    collidePlayerWithRay: function(ray) {
+      // Create a box outline around the player for the ray to collide with.
+      var leftEdge = this.player.x;
+      var rightEdge = this.player.x + this.player.width;
+      var bottomEdge = this.player.y;
+      var topEdge = this.player.y + this.player.height;
+
+      var outline = [
+        new Phaser.Line(leftEdge, topEdge, rightEdge, topEdge),
+        new Phaser.Line(leftEdge, topEdge, leftEdge, bottomEdge),
+        new Phaser.Line(rightEdge, topEdge, rightEdge, bottomEdge),
+        new Phaser.Line(leftEdge, bottomEdge, rightEdge, bottomEdge),
+      ]
+
+      for (var i=0; i < outline.length; i++) {
+        var intersect = Phaser.Line.intersects(ray, outline[i]);
+        if (intersect) {
+          return true;
+        }
+      }
+      return false;
+    },
+
+    collideWallsWithRay: function(ray) {
       var distanceToWall = Number.POSITIVE_INFINITY;
       var closestIntersect = null;
 
