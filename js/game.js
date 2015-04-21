@@ -140,7 +140,7 @@ BasicGame.Game.prototype = {
       var ray;
       var intersect;
       var playerHit;
-      for (var a = 0; a < Math.PI * 2; a += Math.PI/360) {
+      for (var a = 0; a < Math.PI * 2; a += Math.PI/180) {
         ray = new Phaser.Line(
           police.x, police.y,
           police.x + Math.cos(a)*police.radius, police.y + Math.sin(a)*police.radius
