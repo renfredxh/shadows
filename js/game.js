@@ -1,35 +1,19 @@
 
 BasicGame.Game = function (game) {
-    this.game;      //  a reference to the currently running game (Phaser.Game)
-    this.add;       //  used to add sprites, text, groups, etc (Phaser.GameObjectFactory)
-    this.camera;    //  a reference to the game camera (Phaser.Camera)
-    this.cache;     //  the game cache (Phaser.Cache)
-    this.input;     //  the global input manager. You can access this.input.keyboard, this.input.mouse, as well from it. (Phaser.Input)
-    this.load;      //  for preloading assets (Phaser.Loader)
-    this.math;      //  lots of useful common math operations (Phaser.Math)
-    this.sound;     //  the sound manager - add a sound, play one, set-up markers, etc (Phaser.SoundManager)
-    this.stage;     //  the game stage (Phaser.Stage)
-    this.time;      //  the clock (Phaser.Time)
-    this.tweens;    //  the tween manager (Phaser.TweenManager)
-    this.state;     //  the state manager (Phaser.StateManager)
-    this.world;     //  the game world (Phaser.World)
-    this.particles; //  the particle manager (Phaser.Particles)
-    this.physics;   //  the physics manager (Phaser.Physics)
-    this.rnd;       //  the repeatable random number generator (Phaser.RandomDataGenerator)
 
     this.ACCELERATION = 1200;
     this.MAX_SPEED = 350;
     this.FRICTION = 1200;
 
-    this.data;
-    this.police;
-    this.player;
-    this.gem;
-    this.lightBitmap;
-    this.cursors;
-    this.testText;
-    this.levelName;
-    this.level;
+    this.data = null;
+    this.police = null;
+    this.player = null;
+    this.gem = null;
+    this.lightBitmap = null;
+    this.cursors = null;
+    this.testText = null;
+    this.levelName = null;
+    this.level = null;
 };
 
 BasicGame.Game.prototype = {
@@ -61,7 +45,7 @@ BasicGame.Game.prototype = {
       this.player.body.maxVelocity.setTo(this.MAX_SPEED, this.MAX_SPEED);
       this.player.body.drag.setTo(this.FRICTION, this.FRICTION);
 
-      this.gem = this.game.add.sprite(this.level.gem.x, this.level.gem.y, 'gem')
+      this.gem = this.game.add.sprite(this.level.gem.x, this.level.gem.y, 'gem');
       this.gem.anchor.setTo(0.5, 0.5);
       this.game.physics.enable(this.gem, Phaser.Physics.ARCADE);
 
@@ -152,7 +136,7 @@ BasicGame.Game.prototype = {
           ray = new Phaser.Line(
             police.x, police.y,
             intersect.x, intersect.y
-          )
+          );
         } else {
           points.push(ray.end);
         }
@@ -191,7 +175,7 @@ BasicGame.Game.prototype = {
         new Phaser.Line(leftEdge, topEdge, leftEdge, bottomEdge),
         new Phaser.Line(rightEdge, topEdge, rightEdge, bottomEdge),
         new Phaser.Line(leftEdge, bottomEdge, rightEdge, bottomEdge),
-      ]
+      ];
 
       for (var i=0; i < outline.length; i++) {
         var intersect = Phaser.Line.intersects(ray, outline[i]);
@@ -218,7 +202,7 @@ BasicGame.Game.prototype = {
           new Phaser.Line(leftEdge, topEdge, leftEdge, bottomEdge),
           new Phaser.Line(rightEdge, topEdge, rightEdge, bottomEdge),
           new Phaser.Line(leftEdge, bottomEdge, rightEdge, bottomEdge),
-        ]
+        ];
 
         for (var i=0; i < outline.length; i++) {
           var intersect = Phaser.Line.intersects(ray, outline[i]);
