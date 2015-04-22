@@ -5,11 +5,11 @@ BasicGame.Data = function(game) {
   var bottomRight = {
     x: game.width - 40,
     y: game.height - 30
-  }
+  };
   var topRight = {
     x: game.width - 80,
     y: 40
-  }
+  };
   this.maxLevel = 10;
   this.levels = {
     1: {
@@ -268,5 +268,5 @@ BasicGame.Data = function(game) {
         y: world.centerY
       }
     },
-  }
-}
+  };
+};
