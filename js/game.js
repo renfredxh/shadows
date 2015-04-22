@@ -124,7 +124,10 @@ BasicGame.Game.prototype = {
     var ray;
     var intersect;
     var playerHit;
-    for (var a = 0; a < Math.PI * 2; a += Math.PI/180) {
+    // Defines the interval in which rays will be casted. A high resolution means the rays
+    // will be cast in a smoother cirlce, but performance will be slower.
+    var resolution = this.level.resolution || 180;
+    for (var a = 0; a < Math.PI * 2; a += Math.PI/resolution) {
       ray = new Phaser.Line(
         police.x, police.y,
         police.x + Math.cos(a)*police.radius, police.y + Math.sin(a)*police.radius

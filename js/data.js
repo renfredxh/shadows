@@ -1,5 +1,5 @@
 BasicGame.Data = function(game) {
-  // Base size of a 
+  // Base size of a block.
   var b = 32;
   var world = game.world;
   var bottomRight = {
@@ -225,6 +225,7 @@ BasicGame.Data = function(game) {
       }
     },
     10: {
+      resolution: 90,
       walls: [
         {x: world.centerX-b*2-16, y: b*8, w: 8.5, h: 1},
         {x: world.centerX-b*2-16, y: b*11, w: 5, h: 1},
