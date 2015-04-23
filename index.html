@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8">
     <title>Shadows</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <script src="js/phaser.js"></script>
     <script src="js/boot.js"></script>
     <script src="js/data.js"></script>
     <script src="js/preloader.js"></script>
     <script src="js/menu.js"></script>
     <script src="js/game.js"></script>
-
 <style>
 body
 {
@@ -29,6 +29,16 @@ canvas {
 }
 .aligner {
   height: 100%;
+}
+#full-screen {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: #011b35;
+  cursor: pointer;
+}
+#full-screen > .fa {
+  cursor: pointer;
 }
 @media(min-width:768px){
   .aligner {
@@ -59,13 +69,15 @@ canvas {
     padding-top: 10vh;
     height: 90vh;
   }
-k
 </style>
 
 </head>
 <body>
   <div class="aligner">
     <div id="game"></div>
+  </div>
+  <div id="full-screen">
+    <i class="fa fa-expand fa-2x"></i>
   </div>
 
 <script type="text/javascript">

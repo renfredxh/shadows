@@ -33,6 +33,12 @@ BasicGame.Game.prototype = {
     this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
     this.scale.refresh();
 
+    document.getElementById('full-screen').addEventListener('click', function() { 
+      this.scale.setupScale(window.innerWidth, window.innerHeight);
+      this.scale.refresh();
+      this.scale.startFullScreen();
+    }.bind(this));
+
     // Bitmap used for drawing light from the ray caster.
     this.bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
     this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
