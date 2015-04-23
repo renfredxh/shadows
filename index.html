@@ -37,6 +37,15 @@ canvas {
   color: #011b35;
   cursor: pointer;
 }
+.readme {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  color: white;
+  font-size: 12px;
+  max-width: 200px;
+  z-index: -1;
+}
 #full-screen > .fa {
   cursor: pointer;
 }
@@ -50,11 +59,17 @@ canvas {
     width: 90%;
     height: 60%;
   }
+  .readme {
+    display: none;
+  }
 }
 @media(min-width:992px){
   #game {
     width: 960px;
     height: 640px;
+  }
+  .readme {
+    display: block;
   }
 }
 @media(min-width:1919px){
@@ -78,6 +93,15 @@ canvas {
   </div>
   <div id="full-screen">
     <i class="fa fa-expand fa-2x"></i>
+  </div>
+  <div class="readme">
+    Improvements include:
+    <ul>
+      <li>Responsive game scaling (try resizing browser)</li>
+      <li>New bonus level (10 & 11)</li>
+      <li>Improved surrounding theme and layout</li>
+      <li>Minor performance imrovements</li>
+    <ul>
   </div>
 
 <script type="text/javascript">
