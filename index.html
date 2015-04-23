@@ -13,80 +13,60 @@
 <style>
 body
 {
-    color: #777;
-    font-family: "Avenir", Verdana, sans-serif;
-    width: 100%;
+  color: #777;
+  height: 100vh;
+  margin: 0;
+  box-sizing: border-box;
+  background-color: #284260;
+  font-family: "Avenir", Verdana, sans-serif;
 }
 canvas {
   margin: 0 auto;
+  border: solid white 5px;
 }
-#readme
-{
-    margin-top: 10px;
-    margin: 0 5%;
+#game {
+  margin: 0 auto;
 }
+.aligner {
+  height: 100%;
+}
+@media(min-width:768px){
+  .aligner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #game {
+    width: 90%;
+    height: 60%;
+  }
+}
+@media(min-width:992px){
+  #game {
+    width: 960px;
+    height: 640px;
+  }
+}
+@media(min-width:1919px){
+  #game {
+    width: 1280px;
+    height: 720px;
+  }
+  .aligner {
+    display: block;
+  }
+  body {
+    padding-top: 10vh;
+    height: 90vh;
+  }
+k
 </style>
 
 </head>
 <body>
-<div id="game"></div>
-<div id="readme">
-<h2>Shadows</h2>
-<ul>
-
-<li><strong>High Concept:</strong>
-  An abstract stealth game where the player is a diamond thief attempting to avoid being caught by hiding in the shadows of game-obstacles.
-</li>
-
-<li><strong>Player Experience Goals:</strong>
-  Sensitive to sudden movements.
-</li>
-
-<li><strong>Genre:</strong>
-  Stealth.
-</li>
-
-<li><strong>Game play:</strong>
-  Control your character (the small white circle) using the arrow keys. Avoid the police's line of sight, which is represented by the large light-blue circles with a badge symbol in the middle of them. If your character comes in contact with the police's circle, you lose the level. Try to navigate the obstacles in the level to obtain the blue diamond to advance to the next level.
-</li>
-
-<li><strong>Prototype goal:</strong>
-  Use of ray casting as an enemy mechanic.
-</li>
-
-<li><strong>Features:</strong>
-  Minimalist art style, dynamic obstacle courses.
-</li>
-
-<li><strong>Setting/Premise:</strong>
-  Your character is an infamous diamond thief who is the prime suspect of an ongoing police investigation. Not even the presence of astute officers can stop this thief from navigating the world's most complex vaults and museums to steal the 10 most valuable diamonds in existence.
-</li>
-
-<li><strong>Story:</strong>
-</li>
-
-<li><strong>Target Audience:</strong>
-  All audiences.
-</li>
-
-<li><strong>Play time:</strong>
-  Under 5 minutes.
-</li>
-
-<li><strong>Strategies:</strong>
-  Careful timing and evaluating as possibilities for finding a path to the end
-</li>
-
-<li><strong>Prototype Assets:</strong>
-  Visual assets, ray-casting technique, and art style borrowed from the following Phaser tutorial: http://gamemechanicexplorer.com/#raycasting-2
-  Sound effects made from scratch.
-</li>
-
-<li><strong>Prototype Closest Other Game:</strong>
-</li>
-
-</ul>
-</div>
+  <div class="aligner">
+    <div id="game"></div>
+  </div>
 
 <script type="text/javascript">
 window.onload = function() {
@@ -103,6 +83,5 @@ window.onload = function() {
   game.state.start('Boot');
 };
 </script>
-
 </body>
 </html>

@@ -28,6 +28,11 @@ BasicGame.Game.prototype = {
   create: function () {
     this.game.stage.backgroundColor = 0x4488cc;
 
+    // Scaling
+    this.scale.setupScale(960, 640);
+    this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+    this.scale.refresh();
+
     // Bitmap used for drawing light from the ray caster.
     this.bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
     this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
