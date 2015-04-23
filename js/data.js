@@ -225,6 +225,45 @@ BasicGame.Data = function(game) {
       }
     },
     10: {
+      walls: [
+        {x: 16*b, y: 0, w: 1, h: 8},
+        {x: 14*b, y: 0, w: 1, h: 5},
+        {x: 14*b, y: b*6, w: 1, h: 1},
+        {x: 8*b, y: 4*b, w: 6, h: 1},
+        {x: 7*b, y: 4*b, w: 1, h: 5}, // Left wall
+        {x: 9*b, y: 7*b, w: 2, h: 1},
+        {x: 0*b, y: 12*b, w: 8, h: 1},
+        {x: 0*b, y: 8*b, w: 7, h: 4}, // Left fat block
+        {x: 7*b, y: 10*b, w: 1, h: 1}, // Nook seperator
+        {x: 8*b, y: 5*b, w: 1, h: 1}, // Cornerpiece
+        {x: 7*b, y: 12*b, w: 1, h: 6}, // Lower left wall
+        {x: 7*b, y: 18*b, w: 3, h: 1}, // Left-lower floor
+        {x: 11*b, y: 18*b, w: 4, h: 1}, // Middle-lower floor
+        {x: 16*b, y: 18*b, w: 6, h: 1}, // Right-lower floor
+        {x: 9*b, y: 19*b, w: 1, h: 1}, // Bottom nook
+        {x: 11*b, y: 19*b, w: 1, h: 1}, // Bottom nook
+        {x: 23*b, y: 0, w: 1, h: 12}, // Right wall
+        {x: 23*b, y: 13*b, w: 1, h: 8}, // Right wall
+        {x: 17*b, y: 17*b, w: 1, h: 1}, // Bottom nook
+        {x: 9*b, y: 12*b, w: 1, h: 1},
+      ],
+      police: [
+        {
+          x: world.centerX + 16,
+          y: world.centerY - 25,
+          radius: 242,
+          tweenProps: {y: world.centerY + 175},
+          easing: Phaser.Easing.Linear.None,
+          speed: 4200
+        }
+      ],
+      gem: { x: bottomRight.x, y: 13*b - 16},
+      player: {
+        x: world.centerX + 8,
+        y: 15
+      }
+    },
+    11: {
       resolution: 90,
       walls: [
         {x: world.centerX-b*2-16, y: b*8, w: 8.5, h: 1},
