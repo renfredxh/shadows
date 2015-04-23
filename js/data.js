@@ -203,6 +203,7 @@ BasicGame.Data = function(game) {
       walls: [
         {x: 0, y: 64, w: 4, h: 1},
         {x: b*6, y: 64, w: 4, h: 1},
+        {x: b*9, y: 0, w: 1, h: 2},
         {x: b*3, y: b*5, w: 2, h: 1},
         {x: b*3, y: b*9, w: 2, h: 1},
         {x: b*7, y: b*7, w: 2, h: 1},
